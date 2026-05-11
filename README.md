@@ -38,4 +38,4 @@ Spring MVC 기반 커뮤니티 홈페이지 프로젝트입니다.
 <img src="https://raw.githubusercontent.com/chyan04/Spring-MVC/main/screenshots/login.png" width="700">
 
 ### Board
-<img src="https://raw.githubusercontent.com/chyan04/Spring-MVC/main/screenshots/board.png" width="700">
+<img src="https://github.com/chyan04/Spring-MVC/blob/main/screenshots/board.PNG" width="700">
