@@ -31,6 +31,6 @@ Spring MVC 기반 커뮤니티 홈페이지 프로젝트입니다.
 5. Run on Server
 
 ## 화면 캡처
-![main](screenshots/1_main.png)
-![main](screenshots/2_login.png)
-![main](screenshots/3_newLogin.png)
+![main](screenshots/main.png)
+![login](screenshots/login.png)
+![board](screenshots/board.png)
