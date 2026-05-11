@@ -1,0 +1,4 @@
+						System.out.println("startRow : " + pagingUtil.getStartRow());
+						System.out.println("endRow : " + pagingUtil.getEndRow());
+						
+						System.out.println("boardList :" + boardList.size());

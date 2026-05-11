@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.ac.hit.spring.member.dao.MemberDao">
+
+	<select id="selectMemberTest" resultType="member">
+		select
+			mem_id as memId
+			, mem_name as memName
+			, mem_email as memEmail
+		from tb_member
+	</select>
+	
+	<select id="selectMemberList" resultType="member" parameterType="map">
+
+	select 
+		A.*
+	from (
+		SELECT 
+			@ROWNUM := @ROWNUM + 1 as ROWNUM,
+			TB.*
+		from 
+			( select
+				mem_seq_no				as memSeqNo
+				, mem_id					as memId
+				, mem_name				as memName
+				, mem_pwd				as memPwd
+				, mem_birth				as memBirth
+				, mem_phone			as memPhone
+				, mem_email				as memEmail
+				, mem_zipcode			as memZipcode
+				, mem_addr_master	as memAddrMaster
+				, mem_addr_detail		as memAddrDetail
+				, mem_type				as memType
+			FROM tb_member
+			where
+				1=1
+				<if test="searchWord != null and searchWord != ''">
+					<if test="searchType == 'id'">
+						and mem_id = #{searchWord}
+					</if>
+					<if test="searchType == 'name'">
+						and mem_name LIKE CONCAT('%', #{searchWord}, '%')
+					</if>
+				</if>
+			order by mem_seq_no DESC
+		) TB, 
+		( select @ROWNUM := 0 ) R
+	) A where A.ROWNUM between #{startRow} and #{endRow}
+	
+	</select>
+	
+	<select id="selectMemberCount" resultType="int" parameterType="map" >
+		select
+			count(*)
+		from tb_member
+		where
+			1=1
+				<if test="searchWord != null and searchWord != ''">
+					<if test="searchType == 'id'">
+						and mem_id = #{searchWord}
+					</if>
+					<if test="searchType == 'name'">
+						and mem_name LIKE CONCAT('%', #{searchWord}, '%')
+					</if>
+				</if>
+	</select>
+	<select id="selectMember" resultType="member" parameterType="map">
+		select
+				mem_seq_no				as memSeqNo
+				, mem_id					as memId
+				, mem_name				as memName
+				, mem_pwd				as memPwd
+				, mem_birth				as memBirth
+				, mem_phone			as memPhone
+				, mem_email				as memEmail
+				, mem_zipcode			as memZipcode
+				, mem_addr_master	as memAddrMaster
+				, mem_addr_detail		as memAddrDetail
+				, mem_type				as memType
+		from tb_member
+		where
+			1=1
+			<if test="seqNo != null">
+				and mem_seq_no = #{seqNo}
+			</if>
+			<if test="memId != null and memId != ''">
+				and mem_id = #{memId}
+			</if>
+
+	</select>
+	
+	<insert id="insertMember" parameterType="member">
+		insert into tb_member (
+			mem_id
+			, mem_name
+			, mem_pwd
+			, mem_birth
+			, mem_phone
+			, mem_email
+			, mem_zipcode
+			, mem_addr_master
+			, mem_addr_detail 
+		) values (
+		      #{memId}
+			, #{memName}
+			, #{memPwd}
+			, #{memBirth}
+			, #{memPhone}
+			, #{memEmail}
+			, #{memZipcode}
+			, #{memAddrMaster}
+			, #{memAddrDetail}
+		)
+	</insert>
+	
+	<update id="updateMember" parameterType="member">
+		update tb_member
+		set
+			mem_pwd 				= #{memPwd}
+			, mem_phone			 = #{memPhone}
+			, mem_email				 = #{memEmail}
+			, mem_birth 				= #{memBirth}
+			, mem_zipcode 			= #{memZipcode}
+			, mem_addr_master 	= #{memAddrMaster}
+			, mem_addr_detail 		= #{memAddrDetail}
+		where mem_seq_no 		= #{memSeqNo}
+	</update>
+	
+	<delete id="deleteMember" parameterType="member">
+		delete from tb_member
+		where
+			mem_seq_no 		= #{memSeqNo}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="kr.ac.hit.spring.board.dao.BoardDao">
+
+	<!-- 게시글 총 갯수 -->
+	<select id="selectBoardCount" parameterType="map" resultType="int">
+		select 
+			count(*) as count
+		from tb_board
+		where 
+				bo_del_yn = 'N'
+			and bo_type = #{boType}
+			<if test="searchWord != null and searchWord !='' ">
+				<if test="searchType == '01' ">
+					and bo_title like CONCAT('%', #{searchWord}, '%')
+				</if>
+				<if test="searchType == '02'">
+					and bo_content like CONCAT('%', #{searchWord}, '%')
+				</if>
+				<if test="searchType == '03'">
+					and (bo_title like CONCAT('%', #{searchWord}, '%') OR bo_content like CONCAT('%', #{searchWord}, '%'))
+				</if>
+				<if test="searchType == '04'">
+					and BO_WRITER_NAME = #{searchWord}
+				</if>
+				
+			</if>
+			
+	</select>
+	
+	<!-- 게시글 목록 조회 -->
+	<select id="selectBoardList" parameterType="map" resultType="board">
+		select 
+			A.*
+		from (    
+		    select 
+				@ROWNUM := @ROWNUM + 1 as ROWNUM,
+				TB.*
+			from ( 
+				select
+					  BO_SEQ_NO 		as boSeqNo
+					, BO_TYPE 			as boType
+					, BO_TITLE 			as boTitle
+					, BO_CONTENT 		as boContent
+					, BO_WRITER 		as boWriter
+					, BO_WRITER_NAME 	as boWriterName
+					, BO_HIT_CNT 		as boHitCnt
+					, BO_OPEN_YN 		as boOpenYn
+					, BO_DEL_YN 		as boDelYn
+					, REG_DATE 			as regDate
+					, REG_USER 			as regUser
+					, UPD_DATE 			as updDate
+					, UPD_USER 			as updUser
+					, (select min(file_seq_no) from tb_file_item where ref_seq_no = bo_seq_no) as fileSeqNo
+				from tb_board
+				where 
+							bo_del_yn = 'N'
+						and bo_type = #{boType}
+						<!-- 동적쿼리 -->
+						<if test="searchWord != null and searchWord !='' ">
+							<if test="searchType == '01' ">
+								and bo_title like CONCAT('%', #{searchWord}, '%')
+							</if>
+							<if test="searchType == '02'">
+								and bo_content like CONCAT('%', #{searchWord}, '%')
+							</if>
+							<if test="searchType == '03'">
+								and (bo_title like CONCAT('%', #{searchWord}, '%') OR bo_content like CONCAT('%', #{searchWord}, '%'))
+							</if>
+							<if test="searchType == '04'">
+								and BO_WRITER_NAME = #{searchWord}
+							</if>
+						</if>						
+				order by bo_seq_no DESC    
+			) TB, 
+			( select @ROWNUM := 0 ) R
+		) A where A.ROWNUM between #{startRow} and #{endRow} 							
+		
+	</select>
+	
+	
+	<select id="selectBoard" parameterType="map" resultType="board" >
+		select
+			  BO_SEQ_NO 		as boSeqNo
+			, BO_TYPE 			as boType
+			, BO_TITLE 			as boTitle
+			, BO_CONTENT 		as boContent
+			, BO_WRITER 		as boWriter
+			, BO_WRITER_NAME 	as boWriterName
+			, BO_HIT_CNT 		as boHitCnt
+			, BO_OPEN_YN 		as boOpenYn
+			, BO_DEL_YN 		as boDelYn
+			, REG_DATE 			as regDate
+			, REG_USER 			as regUser
+			, UPD_DATE 			as updDate
+			, UPD_USER 			as updUser
+		from tb_board
+		where 
+			bo_seq_no = #{boSeqNo}
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="updateHitCnt" parameterType="map">
+		update tb_board set 
+			bo_hit_cnt = bo_hit_cnt + 1
+		where bo_seq_no = #{boSeqNo}			
+	</update>
+	
+	<insert id="insertBoard" parameterType="board" useGeneratedKeys="true" keyProperty="boSeqNo">
+		<selectKey keyProperty="boSeqNo" resultType="int" order="BEFORE">
+			select
+				case count(*) when 0 then 1 else max(bo_seq_no) + 1 end as boSeqNo
+			from tb_board				
+		</selectKey>
+		insert into tb_board (
+			  bo_type
+			, bo_title
+			, bo_content
+			, bo_writer
+			, bo_writer_name
+			, bo_hit_cnt
+			, bo_open_yn
+			, bo_del_yn
+			, reg_date
+			, reg_user			
+		) values (
+			  #{boType}
+			, #{boTitle}
+			, #{boContent}
+			, #{boWriter}
+			, #{boWriterName}
+			, 0
+			, COALESCE(#{boOpenYn}, 'N')
+			, 'N'
+			, now()
+			, #{boWriter}
+		)
+	</insert>
+	
+	<update id="updateBoard" parameterType="board">
+		update tb_board set 
+				bo_title 		= #{boTitle}
+			, 	bo_content 		= #{boContent}
+			, 	bo_open_yn 		= #{boOpenYn}
+			,	upd_date		= now()
+			,	upd_user		= #{updUser}
+		where 
+			bo_seq_no = #{boSeqNo}			 
+	</update>
+	
+	<update id="deleteBoard" parameterType="board">
+		<!-- bo_del_yn 값을 Y로 변경, 수정일, 수정한사람 -->
+		update tb_board set
+				bo_del_yn 	= 'Y'
+			, 	upd_date 	= now()
+			, 	upd_user	= #{updUser}
+		where
+			bo_seq_no = #{boSeqNo}			
+	</update>
+	
+	
+</mapper>
+
+

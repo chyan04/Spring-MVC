@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- MemberMapper.xml -->
+
+<mapper namespace="kr.ac.hit.spring.file.dao.FileItemDao">
+
+	<select id="selectFileItemList" resultType="fileItem" parameterType="map">
+		select
+			  FILE_SEQ_NO 		as fileSeqNo
+			, REF_SEQ_NO		as refSeqNo
+			, BIZ_TYPE			as bizType
+			, FILE_PATH			as filePath
+			, FILE_NAME			as fileName
+			, file_save_name	as fileSaveName
+			, file_size			as fileSize
+			, file_fancy_size	as fileFancySize
+			, file_down_cnt		as fileDownCnt
+			, reg_date			as regDate
+			, reg_user			as regUser
+			, upd_date			as updDate
+			, upd_user			as updUser
+			, thum_save_name	as thumSaveName
+		from 
+			tb_file_item
+		where 
+			ref_seq_no 		= #{refSeqNo}
+			and biz_type 	= #{bizType}		
+	</select>
+	
+	<select id="selectFileItem" resultType="fileItem" parameterType="map">
+		select
+			  FILE_SEQ_NO 		as fileSeqNo
+			, REF_SEQ_NO		as refSeqNo
+			, BIZ_TYPE			as bizType
+			, FILE_PATH			as filePath
+			, FILE_NAME			as fileName
+			, file_save_name	as fileSaveName
+			, file_size			as fileSize
+			, file_fancy_size	as fileFancySize
+			, file_down_cnt		as fileDownCnt
+			, reg_date			as regDate
+			, reg_user			as regUser
+			, upd_date			as updDate
+			, upd_user			as updUser
+			, thum_save_name	as thumSaveName
+		from 
+			tb_file_item
+		where
+			FILE_SEQ_NO = #{fileSeqNo}	
+	</select>
+	
+	<insert id="insertFileItem" parameterType="fileItem">
+		insert into tb_file_item (
+			  REF_SEQ_NO
+			, BIZ_TYPE
+			, FILE_PATH
+			, FILE_NAME
+			, file_save_name
+			, file_size
+			, file_fancy_size
+			, file_down_cnt
+			, reg_date
+			, reg_user
+			, upd_date
+			, upd_user
+			, thum_save_name
+		) values (			
+			  #{refSeqNo}
+			, #{bizType}
+			, #{filePath}
+			, #{fileName}
+			, #{fileSaveName}
+			, #{fileSize}
+			, #{fileFancySize}
+			, #{fileDownCnt}
+			, now()
+			, #{regUser}
+			, now()
+			, #{updUser}
+			, #{thumSaveName}
+		)	
+	</insert>
+	
+	<delete id="deleteFileItem" parameterType="map">
+		delete from tb_file_item where file_seq_no = ${delFileSeq}
+	</delete>	
+	
+</mapper>
+
+

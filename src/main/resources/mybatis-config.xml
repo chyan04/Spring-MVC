@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0/EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias type="kr.ac.hit.spring.member.model.Member" alias="member" />
+		<typeAlias type="kr.ac.hit.spring.board.model.Board" alias="board" />
+		<typeAlias type="kr.ac.hit.spring.file.model.FileItem" alias="fileItem" />
+		<typeAlias type="kr.ac.hit.spring.notice.model.Notice" alias="notice" />
+		<typeAlias type="kr.ac.hit.spring.faq.Faq" alias="faq" />
+	</typeAliases>
+</configuration>
