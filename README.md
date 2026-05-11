@@ -30,7 +30,12 @@ Spring MVC 기반 커뮤니티 홈페이지 프로젝트입니다.
 4. Maven install
 5. Run on Server
 
-## 화면 캡처
-![main](screenshots/main.png)
-![login](screenshots/login.png)
-![board](screenshots/board.png)
+## 화면 스크린샷
+### Main Page
+<img src="https://raw.githubusercontent.com/chyan04/Spring-MVC/main/screenshots/main.png" width="700">
+
+### Login
+<img src="https://raw.githubusercontent.com/chyan04/Spring-MVC/main/screenshots/login.png" width="700">
+
+### Board
+<img src="https://raw.githubusercontent.com/chyan04/Spring-MVC/main/screenshots/board.png" width="700">
